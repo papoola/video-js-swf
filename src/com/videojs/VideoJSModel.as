@@ -571,7 +571,7 @@ package com.videojs{
                     if(_currentPlaybackType == PlaybackType.HTTP){
                         __src = {
                             path: _src,
-							pseudoStreamStartParam: _pseudoStreamStartParam
+                            pseudoStreamStartParam: _pseudoStreamStartParam
                         };
                         _provider = new HTTPVideoProvider();
                         _provider.attachVideo(_videoReference);

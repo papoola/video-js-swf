@@ -143,7 +143,7 @@ package{
             }
 
             if(loaderInfo.parameters.pseudoStreamStartParam != undefined && loaderInfo.parameters.pseudoStreamStartParam != ""){
-			    _app.model.pseudoStreamStartParam = String(loaderInfo.parameters.pseudoStreamStartParam);
+              _app.model.pseudoStreamStartParam = String(loaderInfo.parameters.pseudoStreamStartParam);
             }
             
             if(loaderInfo.parameters.readyFunction != undefined){
