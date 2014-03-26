@@ -42,6 +42,7 @@ package com.videojs{
         private var _src:String = "";
         private var _rtmpConnectionURL:String = "";
         private var _rtmpStream:String = "";
+        private var _pseudoStreamStartParam:String = "";
         private var _poster:String = "";
 
         private static var _instance:VideoJSModel;
@@ -237,6 +238,13 @@ package com.videojs{
             if(_autoplay){
                 play();
             }
+        }
+
+        public function get pseudoStreamStartParam():String{
+            return _pseudoStreamStartParam;
+        }
+        public function set pseudoStreamStartParam(pValue:String):void {
+            _pseudoStreamStartParam = pValue;
         }
         
         /**
@@ -562,7 +570,8 @@ package com.videojs{
                     
                     if(_currentPlaybackType == PlaybackType.HTTP){
                         __src = {
-                            path: _src
+                            path: _src,
+							pseudoStreamStartParam: _pseudoStreamStartParam
                         };
                         _provider = new HTTPVideoProvider();
                         _provider.attachVideo(_videoReference);

@@ -304,6 +304,17 @@ package com.videojs.providers{
                 _model.broadcastEventExternally(ExternalEventName.ON_START);
             }
         }
+
+        private function getPseudoStreamSrc(pTime:Number):String{
+            var src:String = _src.path;
+            if(src.indexOf("?") > -1){
+                src += "&" + _src.pseudoStreamStartParam + "=" + pTime;
+            }
+            else{
+                src += "?" + _src.pseudoStreamStartParam + "=" + pTime;
+            }
+            return src;
+        }
         
         public function seekBySeconds(pTime:Number):void{
             if(_isPlaying)
@@ -326,26 +337,28 @@ package com.videojs.providers{
                 _startOffset = pTime;
             }
 
-            _ns.seek(pTime);
-            _isBuffering = true;
-
+            if(!_src.pseudoStreamStartParam || (pTime < _ns.bufferLength && _startOffset == 0 ) ){
+                _ns.seek(pTime);
+                _isBuffering = true;
+            }
+            else{
+                _ns.play(getPseudoStreamSrc(pTime));
+            }
         }
         
         public function seekByPercent(pPercent:Number):void{
-            if(_isPlaying && _metadata.duration != undefined){
-                _isSeeking = true;
+            if(_metadata.duration != undefined){
+                var pTime:Number;
                 if(pPercent < 0){
-                    _ns.seek(0);
+                    pTime = 0;
                 }
                 else if(pPercent > 1){
-                    _throughputTimer.stop();
-                    _ns.seek((pPercent / 100) * _metadata.duration);
+                    pTime = (pPercent / 100) * _metadata.duration;
                 }
                 else{
-                    _throughputTimer.stop();
-                    _ns.seek(pPercent * _metadata.duration);
-                    
+                    pTime = pPercent * _metadata.duration;
                 }
+                seekBySeconds(pTime);
             }
         }
         
