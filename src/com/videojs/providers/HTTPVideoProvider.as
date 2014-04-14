@@ -98,7 +98,12 @@ package com.videojs.providers{
         
         public function get duration():Number{
             if(_metadata != null && _metadata.duration != undefined){
-                return Number(_metadata.duration);
+                if(!_src.pseudoStreamStartParam) {
+                    return Number(_metadata.duration);
+                }
+                else{
+                    return _startOffset + Number(_metadata.duration);
+                }
             } else if( _durationOverride && _durationOverride > 0 ) {
                 return _durationOverride;
             }
@@ -308,8 +313,10 @@ package com.videojs.providers{
         public function seekBySeconds(pTime:Number):void{
             if(_isPlaying)
             {
+                _startOffset = pTime;
                 _isSeeking = true;
                 _throughputTimer.stop();
+                
                 if(_isPaused)
                 {
                     _pausedSeekValue = pTime;
@@ -319,11 +326,6 @@ package com.videojs.providers{
             {
                 _isPlaying = true;
                 _hasEnded = false;
-            }
-
-            if(_src.path === null)
-            {
-                _startOffset = pTime;
             }
 
             _ns.seek(pTime);
